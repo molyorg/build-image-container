@@ -3,7 +3,7 @@ name: Clone another private repo
 on: [push]
 
 jobs:
-  clone-job:
+  clone-build-push-moly-graphql-api:
     runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout this repo
@@ -24,4 +24,59 @@ jobs:
         run: |
           docker build -t yukari/moly:graphql_api .
           docker push yukari/moly:graphql_api
+
+  clone-build-push-moly-bun-nextjs-mono:
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      matrix:
+        app_dir: 
+          - apps/dattk
+          - apps/impressifyai
+          - apps/kabr2
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Clone your other private repo
+        run: |
+          git clone --branch mono --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly-bun-nextjs-mono.git
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/moly:$(basename ${{ matrix.app_dir }})"
+          echo "Building $IMAGE_NAME from ${{ matrix.app_dir }}/Dockerfile"
+          docker build -f ${{ matrix.app_dir }}/Dockerfile -t $IMAGE_NAME ${{ matrix.app_dir }}
+
+      - name: Push Docker image
+        run: |
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/moly:$(basename ${{ matrix.app_dir }})"
+          docker push $IMAGE_NAME
+
+  clone-build-push-moly-toolkit:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Clone your other private repo
+        run: |
+          git clone --branch moly-tools-elixir --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/toolkit.git
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker image
+        working-directory: toolkit
+        run: |
+          docker build -t yukari/moly:moly-tools-elixir .
+          docker push yukari/moly:moly-tools-elixir
 
