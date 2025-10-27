@@ -27,12 +27,7 @@ jobs:
 
   clone-build-push-moly-bun-nextjs-mono:
     runs-on: ubuntu-24.04-arm
-    strategy:
-      matrix:
-        app_dir: 
-          - moly-bun-nextjs-mono/apps/dattk
-          - moly-bun-nextjs-mono/apps/impressifyai
-          - moly-bun-nextjs-mono/apps/kabr2
+
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4
@@ -47,14 +42,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      - name: Build and Push Docker image
+        working-directory: moly-bun-nextjs-mono
         run: |
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/moly:$(basename ${{ matrix.app_dir }})"
-          echo "Building $IMAGE_NAME from ${{ matrix.app_dir }}/Dockerfile"
-          docker build -f ${{ matrix.app_dir }}/Dockerfile -t $IMAGE_NAME ${{ matrix.app_dir }}
-
-      - name: Push Docker image
-        run: |
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/moly:$(basename ${{ matrix.app_dir }})"
-          docker push $IMAGE_NAME
+          docker build -t yukari/moly:mono .
+          docker push yukari/moly:mono
 
