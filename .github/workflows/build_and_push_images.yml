@@ -1,0 +1,15 @@
+name: Clone another private repo
+
+on: [push]
+
+jobs:
+  clone-job:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Clone your other private repo
+        run: |
+          git clone https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly.git
+
