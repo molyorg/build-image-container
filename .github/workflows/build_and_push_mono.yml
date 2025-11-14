@@ -6,7 +6,7 @@ on:
       - mono
 
 jobs:
-  clone-build-push-moly-nextjs-dattk:
+  clone-build-push-moly-frontend-dattk:
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -15,7 +15,7 @@ jobs:
 
       - name: Clone your other private repo
         run: |
-          git clone --branch dattk --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly-nextjs.git
+          git clone --branch dattk --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly-frontend.git
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -24,12 +24,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker image
-        working-directory: moly-nextjs
+        working-directory: moly-frontend
         run: |
           docker build -t yukari/moly:dattk .
           docker push yukari/moly:dattk
 
-  clone-build-push-moly-nextjs-impressifyai:
+  clone-build-push-moly-frontend-impressifyai:
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -38,7 +38,7 @@ jobs:
 
       - name: Clone your other private repo
         run: |
-          git clone --branch impressifyai --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly-nextjs.git
+          git clone --branch impressifyai --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly-frontend.git
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -47,12 +47,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker image
-        working-directory: moly-nextjs
+        working-directory: moly-frontend
         run: |
           docker build -t yukari/moly:impressifyai .
           docker push yukari/moly:impressifyai
 
-  clone-build-push-moly-nextjs-kabr2:
+  clone-build-push-moly-frontend-kabr2:
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -61,7 +61,7 @@ jobs:
 
       - name: Clone your other private repo
         run: |
-          git clone --branch kabr2 --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly-nextjs.git
+          git clone --branch kabr2 --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly-frontend.git
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -70,8 +70,30 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker image
-        working-directory: moly-nextjs
+        working-directory: moly-frontend
         run: |
           docker build -t yukari/moly:kabr2 .
           docker push yukari/moly:kabr2
 
+  clone-build-push-moly-frontend-ideasion:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Clone your other private repo
+        run: |
+          git clone --branch ideasion --single-branch https://x-access-token:${{ secrets.OTHER_REPO_TOKEN }}@github.com/molyorg/moly-frontend.git
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker image
+        working-directory: moly-frontend
+        run: |
+          docker build -t yukari/moly:ideasion .
+          docker push yukari/moly:ideasion
